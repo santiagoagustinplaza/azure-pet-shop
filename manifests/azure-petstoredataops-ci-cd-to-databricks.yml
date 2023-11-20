@@ -1,0 +1,41 @@
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - petstore/petstoredataops/*
+
+resources:
+- repo: self
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Build
+  displayName: Build stage
+  jobs: 
+    - job: Build
+      steps:
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: 'petstore/petstoredataops'
+          ArtifactName: 'petstoredataops'   
+- stage: Deploy
+  displayName: Deploy Stage
+  dependsOn: Build
+  jobs:
+    - job: Deploy
+      steps:
+      - task: configuredatabricks@0
+        inputs:
+          url: 'https://adb-5501209530448281.1.azuredatabricks.net'
+          token: $(token)
+      - task: startcluster@0
+        inputs:
+          clusterid: '0720-145135-coup132'          
+      - task: deploynotebooks@0
+        inputs:
+          notebooksFolderPath: '$(System.DefaultWorkingDirectory)/petstore/petstoredataops/notebooks'
+          workspaceFolder: '/prod'

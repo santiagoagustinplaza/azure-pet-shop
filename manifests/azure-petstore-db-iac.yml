@@ -1,0 +1,66 @@
+name: Deploy Database Infrastructure
+
+parameters:
+- name: resourceGroup
+  displayName: Database Resource Group
+  type: string
+  default: Test
+- name: region
+  displayName: Database Region
+  type: string
+  default: East US 2
+  values:
+  - East US
+  - East US 2
+  - West US
+  - West US 2
+- name: cosmosAccountName
+  displayName: Cosmos Account Name
+  type: string
+  default: AzurePetStore
+- name: cosmosDatabaseName
+  displayName: Cosmos Database Name
+  type: string
+  default: E-Commerce
+- name: cosmosContainerName
+  displayName: Cosmos Container Name
+  type: string
+  default: Orders
+
+trigger: none
+
+variables:
+  vmImageName: 'ubuntu-latest'
+  azureServiceConnection: 'Azure'
+  templateFile: 'petstore/iac/bicep/db/main.bicep'
+
+pool:
+  vmImage: $(vmImageName)
+
+stages:
+- stage: Deploy
+  displayName: Deploy Database Infrastructure Stage
+  jobs:
+  - deployment: Deploy
+    displayName: Deploy Database Infrastructure Job
+    pool:
+      vmImage: 'ubuntu-latest'
+    environment: 'Development'
+    strategy:
+      runOnce:
+        deploy:
+          steps:
+            - checkout: self
+            - task: AzureCLI@2
+              inputs:
+                azureSubscription: $(azureServiceConnection)
+                scriptType: bash
+                scriptLocation: inlineScript
+                inlineScript: |
+                  az --version
+                  ls -l
+                  if [ $(az group exists --name ${{ parameters.resourceGroup }}) = false ]; then
+                    az group create --name ${{ parameters.resourceGroup }} --location 'eastus'
+                  fi
+                  az deployment group create \
+                    --resource-group ${{ parameters.resourceGroup }} --template-file $(templateFile) --parameters accountName='${{ parameters.cosmosAccountName }}' location='${{ parameters.region }}' databaseName='${{ parameters.cosmosDatabaseName }}' containerName='${{ parameters.cosmosContainerName }}' partitionKeyPath='/partition' --verbose

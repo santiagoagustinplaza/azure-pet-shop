@@ -1,0 +1,33 @@
+# Deploy to Azure Kubernetes Service
+# Build and push image to Azure Container Registry; Deploy to Azure Kubernetes Service
+# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
+
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - petstore/petstoreautomationheadless/*
+
+resources:
+- repo: self
+
+stages:
+- stage: Compile
+  displayName: Compile & Execute Regression Test(s) Stage
+  jobs: 
+  - job: Automation
+    pool: 
+      name: Azure Automation Pipelines
+      demands:
+        - agent.name -equals automation
+    steps:
+    - script: |
+        cd /Users/christremblay/Development/automation/vsts-agent-osx-x64-2.211.1/_work/1/s/petstore/petstoreautomationheadless
+        mvn clean test
+
+    - task: PublishTestResults@2
+      inputs:
+         testResultsFormat: 'JUnit'
+         testResultsFiles: '/Users/christremblay/Development/automation/vsts-agent-osx-x64-2.211.1/_work/1/s/petstore/petstoreautomationheadless/target/surefire-reports/TEST-*.xml'

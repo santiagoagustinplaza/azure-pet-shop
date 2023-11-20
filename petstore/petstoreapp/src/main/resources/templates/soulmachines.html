@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+
+<head lang="en" th:replace="fragments/head :: head"></head>
+
+<body>
+	<div lang="en" th:replace="fragments/header :: header"></div>
+
+	<style>
+	</style>
+
+	<iframe id="soulmachines" th:src="@{'https://azurepetstore.com/static/index.html?sid=' + ${sid} + '&csrf=' + ${_csrf.token}}" style="overflow: hidden; top:0; left:0; bottom:0; right:0; width:100%; height:522px; border:none; margin:0; padding:0;"  scrolling="no">
+		Your browser doesn't support iframes
+	</iframe>
+		
+	</div>
+
+	<div lang="en" th:replace="fragments/footersoulmachines :: footer"></div>
+	
+	<!--
+	<div lang="en" th:replace="fragments/footer :: footer"></div>
+	<div lang="en" th:replace="fragments/disclaimer :: disclaimer"></div>
+	-->
+
+	<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+	<script>
+		function cartcount(){
+			$.ajax({
+			 url: 'api/cartcount',
+			 type: 'GET',
+			 success: function(size){
+			  console.log("cart count: " + size);
+			  $( "#cartcount" ).html(size);
+			 }
+			});
+		   }
+		   
+		   $(document).ready(function(){
+			setInterval(cartcount,5000);
+		   });
+	</script>
+
+</body>
+
+</html>

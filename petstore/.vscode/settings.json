@@ -1,0 +1,16 @@
+{
+    "azureFunctions.javaBuildTool": "maven",
+    "azureFunctions.deploySubpath": "petstorefunctions/target/azure-functions/petstorefunctions-20210909164525299",
+    "azureFunctions.projectLanguage": "Java",
+    "azureFunctions.projectRuntime": "~3",
+    "debug.internalConsoleOptions": "neverOpen",
+    "azureFunctions.preDeployTask": "package (functions)",
+    "markdownlint.config": {
+        "MD028": false,
+        "MD025": {
+            "front_matter_title": ""
+        }
+    },
+    "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:jni+resolve=off",
+    "java.configuration.updateBuildConfiguration": "interactive"
+}

@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aks-petstoreorderservice
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aks-petstoreorderservice
+  template:
+    metadata:
+      labels:
+        app: aks-petstoreorderservice
+    spec:
+      nodeSelector:
+        "kubernetes.io/os": linux
+        agentpool: nodepool1
+      containers:
+      - name: petstoreorderservice
+        image: azurepetstorecontainerregistry.azurecr.io/petstoreorderservice:latest
+        resources:
+          requests:
+            cpu: 250m
+            memory: 1Gi
+          limits:
+            cpu: 500m
+            memory: 2Gi
+        ports:
+        - containerPort: 8080
+        env:
+          - name: PETSTOREORDERSERVICE_SERVER_PORT
+            value: "80"
+          - name: spring.config.name
+            value: application_with_everything_enabled
+          - name: APPLICATIONINSIGHTS_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: aisecretkey
+                key: secret
+          - name: PETSTOREPRODUCTSERVICE_URL
+            value: "http://aks-petstoreproductservice/"
+          - name: PETSTOREORDERSERVICE_EMAIL_TOPIC_CONNECTION_STRING
+            valueFrom:
+              secretKeyRef:
+                name: emailtopicconnstring
+                key: secret
+          - name: PETSTOREORDERSERVICE_SUBSCRIPTION_ID
+            valueFrom:
+              secretKeyRef:
+                name: subscriptionid
+                key: secret
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: aks-petstoreorderservice-hpa
+spec:
+  # orders are in memory for the moment, need to implement a distributed order cache before inscreasing scale...
+  maxReplicas: 1 # define max replica count
+  minReplicas: 1 # define min replica count
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: aks-petstoreorderservice
+  targetCPUUtilizationPercentage: 90 # target CPU utilization

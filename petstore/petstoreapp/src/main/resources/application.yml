@@ -1,0 +1,65 @@
+#logging:
+#  level:
+#    org.springframework: DEBUG
+bing:
+  search:
+    subscription:
+      key: ${BING_SEARCH_SUBSCRIPTION_KEY:}
+petstore:
+  service:
+    pet:
+     url: ${PETSTOREPETSERVICE_URL:http://localhost:8081}
+    product:
+      url: ${PETSTOREPRODUCTSERVICE_URL:http://localhost:8082}
+    order:
+      url: ${PETSTOREORDERSERVICE_URL:http://localhost:8083}
+    #subscription:
+    #  key: ${PETSTORESERVICE_SUBSCRIPTION_KEY}
+  #apim:
+  #  host: ${PETSTORE_APIM_HOST}
+  logging:
+    additional-headers-to-log: ${PETSTORE_ADDITIONAL_HEADERS_TO_LOG:}
+    additional-headers-to-send: ${PETSTORE_ADDITIONAL_HEADERS_TO_SEND:}
+  signalR:
+    negotiation-url: ${SIGNALR_NEGOTIATION_URL:}
+    service-url: ${SIGNALR_SERVICE_URL:}
+    key: ${SIGNALR_SERVICE_KEY:}
+    update:
+      fixedRate: ${SIGNALR_UPDATE_FIXEDRATE:60000}
+server:
+  port: ${PETSTOREAPP_SERVER_PORT:8080}
+#azure:
+#  activedirectory:
+#    b2c:
+#      tenant: ${PETSTOREAPP_B2C_TENANT}
+#      oidc-enabled: true
+#      client-id: ${PETSTOREAPP_B2C_CLIENT_ID}
+#      client-secret: ${PETSTOREAPP_B2C_CLIENT_SECRET}
+#      reply-url: ${PETSTOREAPP_B2C_REPLY_URL}
+#      logout-success-url: ${PETSTOREAPP_B2C_LOGOUT_URL}
+#      user-flows:
+#        sign-up-or-sign-in: B2C_1_signupsignin
+#        profile-edit: B2C_1_profileediting
+#        password-reset: B2C_1_passwordreset
+#  application-insights:
+#      instrumentation-key: ${PETSTOREAPP_AI_INSTRUMENTATION_KEY}
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"       
+  trace:
+    http:
+      enabled: true 
+  endpoint:
+    httptrace:
+      enabled: true
+spring:
+  application:
+    name: petstoreapp
+  thymeleaf:
+    cache: false
+  cache:
+    cache-names: currentUsers
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration #disable if hybrid connection demo turned off

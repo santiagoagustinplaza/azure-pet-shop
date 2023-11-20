@@ -1,0 +1,77 @@
+#logging:
+#  level:
+#    org.springframework.security: DEBUG
+bing:
+  search:
+    subscription:
+      key: ${BING_SEARCH_SUBSCRIPTION_KEY:}
+petstore:
+  service:
+    pet:
+      url: ${PETSTOREPETSERVICE_URL}
+    product:
+      url: ${PETSTOREPRODUCTSERVICE_URL}
+    order:
+      url: ${PETSTOREORDERSERVICE_URL}
+    subscription:
+      key: ${PETSTORESERVICES_SUBSCRIPTION_KEY}
+  apim:
+    host: ${PETSTORE_APIM_HOST}
+  logging:
+    additional-headers-to-log: ${PETSTORE_ADDITIONAL_HEADERS_TO_LOG:}
+    additional-headers-to-send: ${PETSTORE_ADDITIONAL_HEADERS_TO_SEND:}
+  signalR:
+    negotiation-url: ${SIGNALR_NEGOTIATION_URL:}
+    service-url: ${SIGNALR_SERVICE_URL:}
+    key: ${SIGNALR_SERVICE_KEY:}
+    update:
+      fixedRate: ${SIGNALR_UPDATE_FIXEDRATE:60000}
+server:
+  port: ${PETSTOREAPP_SERVER_PORT}
+  max-http-header-size: 1MB
+azure:
+  activedirectory:
+    b2c:
+      tenant: ${PETSTOREAPP_B2C_TENANT}
+      oidc-enabled: true
+      client-id: ${PETSTOREAPP_B2C_CLIENT_ID}
+      client-secret: ${PETSTOREAPP_B2C_CLIENT_SECRET}
+      reply-url: ${PETSTOREAPP_B2C_REPLY_URL}
+      logout-success-url: ${PETSTOREAPP_B2C_LOGOUT_URL}
+      user-flows:
+        sign-up-or-sign-in: B2C_1_signupsignin
+        profile-edit: B2C_1_profileediting
+        password-reset: B2C_1_passwordreset
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"       
+  trace:
+    http:
+      enabled: true 
+  endpoint:
+    httptrace:
+      enabled: true
+spring:
+  application:
+    name: petstoreapp
+  thymeleaf:
+    cache: false  
+  cache:
+    cache-names: currentUsers
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+  #datasource:
+  #  url: ${PETSTOREAPP_MYSQL_HC_CONN_STRING}
+  #  username: ${PETSTOREAPP_MYSQL_HC_USERNAME}
+  #  password: ${PETSTOREAPP_MYSQL_HC_PASSWORD}
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration #disable if hybrid connection demo turned off
+ga:
+  tracking:
+    id: ${GA_TRACKING_ID}
+ 
+host: ${HOST}
