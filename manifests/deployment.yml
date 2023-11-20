@@ -1,0 +1,19 @@
+apiVersion : apps/v1
+kind: Deployment
+metadata:
+  name: myazurepetshop 
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: myazurepetshop
+  template:
+    metadata:
+      labels:
+        app: myazurepetshop 
+    spec:
+      containers:
+        - name: myazurepetshop 
+          image: myazurepetstorecr.azurecr.io/myazurepetshop
+          ports:
+          - containerPort: 80
